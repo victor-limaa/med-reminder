@@ -1,8 +1,14 @@
 import { Button, Heading, Icon, Image, Text, View } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@enums/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const PresentationScreen = ({ navigation }) => {
+  const handleNextPage = async () => {
+    await AsyncStorage.setItem("alreadyAccessed", "true");
+    navigation.navigate("Home");
+  };
+
   return (
     <View
       flex={1}
@@ -30,7 +36,7 @@ export const PresentationScreen = ({ navigation }) => {
         variant={"ghost"}
         colorScheme={"fuchsia"}
         endIcon={<Icon as={Ionicons} name="arrow-forward" />}
-        onPress={() => navigation.navigate("Home")}
+        onPress={handleNextPage}
       >
         Próximo
       </Button>

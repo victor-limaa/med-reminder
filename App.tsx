@@ -1,5 +1,4 @@
 import "react-native-gesture-handler";
-import { PresentationScreen } from "./src/screen/Presentation";
 import { StatusBar } from "expo-status-bar";
 import { extendTheme, NativeBaseProvider, View } from "native-base";
 import { useFonts } from "expo-font";
