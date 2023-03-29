@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { AddMedicineScreen } from "@screen/AddMedicine";
 import { HomeScreen } from "@screen/Home";
 import { PresentationScreen } from "@screen/Presentation";
 import { View } from "native-base";
@@ -34,6 +35,11 @@ const Routes = () => {
         >
           <Stack.Screen name="Presentation" component={PresentationScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            options={{ headerShown: true }}
+            name="AddMedicine"
+            component={AddMedicineScreen}
+          />
         </Stack.Navigator>
       ) : (
         <View flex={1} justifyContent={"center"} alignItems={"center"}>

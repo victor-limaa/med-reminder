@@ -22,6 +22,7 @@ export const DayMonthList = ({ selectedData, setSelectedData }) => {
       restDays.push({
         day: DaysOfWeek[currentMoment.date(dateDay).day()],
         date: dateDay,
+        month: currentMoment.month(),
       });
     }
     return setRestDaysMonth(restDays);
@@ -41,11 +42,10 @@ export const DayMonthList = ({ selectedData, setSelectedData }) => {
       <ScrollView horizontal maxH={"20"}>
         {restOfDaysMonth.map((item, index) => {
           return (
-            <Pressable onPress={() => setSelectedData(item)}>
+            <Pressable key={index} onPress={() => setSelectedData(item)}>
               {({ isPressed }) => {
                 return (
                   <Box
-                    key={index}
                     bg={
                       isPressed
                         ? "fuchsia.600"
