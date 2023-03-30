@@ -5,6 +5,7 @@ import moment from "moment";
 import DaysOfWeek from "@enums/daysOfWeek";
 import Months from "@enums/months";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const HomeScreen = ({ navigation }) => {
   const currentMoment = moment();
@@ -30,6 +31,17 @@ export const HomeScreen = ({ navigation }) => {
           Months[selectedData.month]
         }`;
   };
+
+  const getMedicinesList = async () => {
+    try {
+      const MEDICINES = await AsyncStorage.getItem("@medicines");
+      console.log(JSON.parse(MEDICINES));
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getMedicinesList();
+  }, []);
 
   return (
     <View flex={1} paddingY={"6"} paddingX={"2"}>
