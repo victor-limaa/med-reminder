@@ -4,5 +4,5 @@ export const Colors = Object.freeze({
   orange: "#db4600",
   lightOrange: "#fb8603",
   white: "#ffffff",
-  darkGrey: "#333333",
+  darkGrey: "trueGray.800",
 });

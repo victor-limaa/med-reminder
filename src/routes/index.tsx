@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AddMedicineScreen } from "@screen/AddMedicine";
+import { EditMedicineScreen } from "@screen/EditMedicine";
 import { HomeScreen } from "@screen/Home";
 import { PresentationScreen } from "@screen/Presentation";
 import { View } from "native-base";
@@ -39,6 +40,11 @@ const Routes = () => {
             options={{ headerShown: true }}
             name="AddMedicine"
             component={AddMedicineScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: true }}
+            name="EditMedicine"
+            component={EditMedicineScreen}
           />
         </Stack.Navigator>
       ) : (

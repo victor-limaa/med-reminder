@@ -15,11 +15,12 @@ import moment from "moment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native";
 
-export const AddMedicineScreen = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [reason, setReason] = useState("");
-  const [type, setType] = useState("");
-  const [timeValue, setTimeValue] = useState(new Date());
+export const EditMedicineScreen = ({ navigation, route }) => {
+  const item = route.params.item;
+  const [name, setName] = useState(item.name);
+  const [reason, setReason] = useState(item.reason);
+  const [type, setType] = useState(item.type);
+  const [timeValue, setTimeValue] = useState(new Date(item.timeValue));
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -35,20 +36,40 @@ export const AddMedicineScreen = ({ navigation }) => {
   const handleSubmitForm = async () => {
     try {
       setIsLoading(true);
-      // await AsyncStorage.removeItem("@medicines");
-      const newMedicine = { name, reason, type, timeValue };
-      const MEDICINES = await AsyncStorage.getItem("@medicines");
+      const editedMedicine = { name, reason, type, timeValue };
+      const res = await AsyncStorage.getItem("@medicines");
 
-      if (MEDICINES) {
-        let valueToStorage = JSON.parse(MEDICINES);
-        valueToStorage.push(newMedicine);
-        valueToStorage = JSON.stringify(valueToStorage);
-        await AsyncStorage.setItem("@medicines", valueToStorage);
+      if (res) {
+        let medicines = JSON.parse(res);
+        const foundMedicine = medicines.filter((med) => {
+          return med.name != item.name && med.timeValue != item.timeValue;
+        });
+        foundMedicine.push(editedMedicine);
+        await AsyncStorage.setItem("@medicines", JSON.stringify(foundMedicine));
         setIsLoading(false);
         navigation.navigate("Home");
-      } else {
-        const valueToStorage = JSON.stringify([newMedicine]);
-        await AsyncStorage.setItem("@medicines", valueToStorage);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      setShowAlert(true);
+    }
+  };
+
+  const handleDeleteMedicine = async () => {
+    try {
+      setIsLoading(true);
+      const res = await AsyncStorage.getItem("@medicines");
+
+      if (res) {
+        let medicines = JSON.parse(res);
+        const filteredMedicines = medicines.filter((med) => {
+          return med.name != item.name && med.timeValue != item.timeValue;
+        });
+        await AsyncStorage.setItem(
+          "@medicines",
+          JSON.stringify(filteredMedicines)
+        );
         setIsLoading(false);
         navigation.navigate("Home");
       }
@@ -75,6 +96,7 @@ export const AddMedicineScreen = ({ navigation }) => {
     type,
     setType,
     timeValue,
+
     setTimeValue,
   ]);
 
@@ -86,12 +108,14 @@ export const AddMedicineScreen = ({ navigation }) => {
           <Input
             placeholder="Nome do Remedio"
             onChangeText={(text) => setName(text)}
+            value={name}
           />
 
           <FormControl.Label>Motivo</FormControl.Label>
           <Input
             placeholder="Motivo"
             onChangeText={(text) => setReason(text)}
+            value={reason}
           />
 
           <FormControl.Label>Tipo</FormControl.Label>
@@ -99,6 +123,7 @@ export const AddMedicineScreen = ({ navigation }) => {
             accessibilityLabel="Tipo"
             placeholder="Tipo"
             onValueChange={(value) => setType(value)}
+            selectedValue={type}
           >
             <Select.Item label="Comprimido" value="comprimidos" />
             <Select.Item label="Capsula" value="capsulas" />
@@ -123,24 +148,38 @@ export const AddMedicineScreen = ({ navigation }) => {
               is24Hour={true}
               onChange={onChangeTimePicker}
               locale="pt-BR"
-              // timeZoneOffsetInMinutes={0}
             />
           ) : null}
         </FormControl>
 
-        <Button
+        <View
           position={"absolute"}
           bottom={10}
           w={"100%"}
-          alignSelf="center"
-          colorScheme={"fuchsia"}
-          onPress={handleSubmitForm}
-          isDisabled={!isFormValid}
+          justifyContent={"center"}
+          alignSelf={"center"}
         >
-          <Text fontWeight={"semibold"} color="white">
-            Adicionar
-          </Text>
-        </Button>
+          <Button
+            colorScheme={"fuchsia"}
+            onPress={handleSubmitForm}
+            isDisabled={!isFormValid}
+            mb={4}
+          >
+            <Text fontWeight={"semibold"} color="white">
+              Salvar
+            </Text>
+          </Button>
+
+          <Button
+            colorScheme={"warning"}
+            onPress={handleDeleteMedicine}
+            isDisabled={!isFormValid}
+          >
+            <Text fontWeight={"semibold"} color="white">
+              Excluir
+            </Text>
+          </Button>
+        </View>
       </View>
       <AlertDialog
         leastDestructiveRef={React.useRef(null)}
@@ -151,7 +190,7 @@ export const AddMedicineScreen = ({ navigation }) => {
           <AlertDialog.CloseButton />
           <AlertDialog.Header>Adicionar Remédio</AlertDialog.Header>
           <AlertDialog.Body>
-            Não foi possível adicionar novo remédio no momento. Tente novamente!
+            Não foi possível editar o remédio no momento. Tente novamente!
           </AlertDialog.Body>
         </AlertDialog.Content>
       </AlertDialog>

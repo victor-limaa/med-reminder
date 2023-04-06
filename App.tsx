@@ -1,9 +1,10 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
+import { Platform } from "react-native";
 import { extendTheme, NativeBaseProvider, View } from "native-base";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import Routes from "./src/routes";
 
 SplashScreen.preventAutoHideAsync();
